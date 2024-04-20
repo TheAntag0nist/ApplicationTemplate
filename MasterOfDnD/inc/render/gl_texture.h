@@ -17,6 +17,7 @@ public:
 	size_t get_height() const;
 	size_t get_width() const;
 	int get_channels() const;
+	uint32_t get_id() const;
 
 private:
 	std::string m_image_path;

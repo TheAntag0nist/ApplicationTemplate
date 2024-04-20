@@ -17,6 +17,10 @@ int gl_texture::get_channels() const {
 	return m_channels;
 }
 
+uint32_t gl_texture::get_id() const {
+	return m_texture_id;
+}
+
 void gl_texture::init(const char* img_path) {
 	m_image_path = img_path;
 	glGenTextures(1, &m_texture_id);
