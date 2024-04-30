@@ -7,6 +7,7 @@
 #include <file_system/fs_helper.h>
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
@@ -44,6 +45,7 @@ void app::init() {
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
+	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
 	m_window = glfwCreateWindow(m_width, m_height, m_title, NULL, NULL);
 	if (m_window == nullptr) {
@@ -51,12 +53,11 @@ void app::init() {
 		std::exit(1);
 	}
 
+	//glfwSetWindowPos(m_window, 100, 100);
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(1);
 
 	glfwSetFramebufferSizeCallback(m_window, app::on_resize_callback);
-	//glfwSetCursorPosCallback(m_window, app::on_mouse_callback);
-	//glfwSetScrollCallback(m_window, app::on_scroll_callback);
 
 	stbi_set_flip_vertically_on_load(true);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -68,13 +69,22 @@ void app::init() {
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); (void)io; 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplGlfw_InitForOpenGL(m_window, true);
@@ -85,6 +95,7 @@ void app::init() {
 }
 
 void app::update() {
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	float vertices[] = {
 		// positions         // texture coords
 		 0.5f,  0.5f, 0.0f,  1.0f, 1.0f, // top right
@@ -140,17 +151,14 @@ void app::update() {
 		m_delta_time = current_frame - m_last_frame;
 		m_last_frame = current_frame;
 
-		//process_input(m_window);
 		glfwPollEvents();
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
 		bool value = true;
 		ImGui::ShowDemoWindow(&value);
-
-		ImGui::Render();
+		
 		glViewport(0, 0, m_width, m_height);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
@@ -176,7 +184,15 @@ void app::update() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
 		glfwSwapBuffers(m_window);
 	}
 }
@@ -195,35 +211,6 @@ app& app::get_instance() {
 	return instance;
 }
 
-void app::on_mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-	app& instance = app::get_instance();
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
-
-	if (instance.m_ignore_mouse_input)
-		return;
-
-	if (instance.m_first_mouse)
-	{
-		instance.m_last_x = xpos;
-		instance.m_last_y = ypos;
-		instance.m_first_mouse = false;
-		return;
-	}
-
-	float xoffset = xpos - instance.m_last_x;
-	float yoffset = instance.m_last_y - ypos;
-
-	instance.m_last_x = xpos;
-	instance.m_last_y = ypos;
-
-	global_camera.process_mouse_movement(xoffset, yoffset);
-}
-
-void app::on_scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	global_camera.process_mouse_scroll(static_cast<float>(yoffset));
-}
-
 void app::on_resize_callback(GLFWwindow* window, int width, int height) {
 	app& instance = app::get_instance();
 	glViewport(0, 0, width, height);
@@ -233,30 +220,6 @@ void app::on_resize_callback(GLFWwindow* window, int width, int height) {
 
 void app::on_error_callback(int error, const char* description) {
 	logger::get_instance().err(description);
-}
-
-void app::process_input(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		m_ignore_mouse_input = false;
-	}
-	else {
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		m_ignore_mouse_input = true;
-		m_first_mouse = true;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		global_camera.process_keyboard(FORWARD, m_delta_time);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		global_camera.process_keyboard(BACKWARD, m_delta_time);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		global_camera.process_keyboard(LEFT, m_delta_time);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		global_camera.process_keyboard(RIGHT, m_delta_time);
 }
 
 void app::show_console() {

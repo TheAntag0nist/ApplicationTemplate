@@ -13,10 +13,6 @@ public:
 protected:
 	app() = default;
 	virtual ~app() = default;
-	void process_input(GLFWwindow* window);
-	
-	static void on_scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
-	static void on_mouse_callback(GLFWwindow* window, double x_pos, double y_pos);
 	
 	static void on_resize_callback(GLFWwindow* window, int width, int height);
 	static void on_error_callback(int error, const char* description);
