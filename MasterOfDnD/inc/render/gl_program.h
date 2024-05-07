@@ -13,7 +13,6 @@ public:
 	void set_bool(const std::string& name, bool value);
 	void set_float(const std::string& name, float value);
 	void set_integer(const std::string& name, int value);
-
 	void set_vec2(const std::string& name, glm::vec2 value);
 	void set_vec2(const std::string& name, float x, float y);
 

@@ -92,6 +92,8 @@ void app::init() {
 	ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
 #endif
 	ImGui_ImplOpenGL3_Init(glsl_version);
+
+	internal_init();
 }
 
 void app::update() {
@@ -231,5 +233,68 @@ void app::show_console() {
 void app::hide_console() {
 #ifdef _WIN32
 	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
+#endif
+}
+
+#ifdef _WIN32
+LRESULT CALLBACK app::internal_proc(HWND h_wnd, UINT u_msg, WPARAM w_param, LPARAM l_param) {
+	// Custom proc
+	auto inst = app::get_instance();
+	return CallWindowProc(inst.m_original_proc, h_wnd, u_msg, w_param, l_param);
+}
+#endif
+
+void app::set_window_icon() {
+	GLFWimage images[1];
+	fs_helper& fs_inst = fs_helper::get_instance();
+	std::string icon_path = (std::filesystem::path(fs_inst.get_root_path()) / "icon.png").string();
+
+	stbi_set_flip_vertically_on_load(false);
+	images[0].pixels = stbi_load(icon_path.c_str(), &images[0].width, &images[0].height, 0, 4);
+	glfwSetWindowIcon(m_window, 1, images);
+	stbi_image_free(images[0].pixels);
+	stbi_set_flip_vertically_on_load(true);
+}
+
+void app::internal_init() {
+#ifdef _WIN32
+	// 1. Get window handle
+	HWND h_wnd = glfwGetWin32Window(m_window);
+	
+	// 2. Set custom proc
+	m_original_proc = (WNDPROC)GetWindowLongPtr(h_wnd, GWLP_WNDPROC);
+	(WNDPROC)SetWindowLongPtr(h_wnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(app::internal_proc));
+
+	// 3. Set icon
+	set_window_icon();
+	
+	// 4. Check functions
+	FARPROC dwm_set_win_attr = NULL;
+	HMODULE library = LoadLibrary("dwmapi.dll");
+	if (!library)
+		return;
+
+	dwm_set_win_attr = GetProcAddress(library, "DwmSetWindowAttribute");
+	if (dwm_set_win_attr != NULL) {
+		// Use Mica
+		int use_mica = 1;
+		DwmSetWindowAttribute(
+			h_wnd, DWMWA_MICA_EFFECT,
+			&use_mica, sizeof(int)
+		);
+
+		// Remove rounded corners
+		int attribute = DWMWCP_DONOTROUND;
+		DwmSetWindowAttribute(
+			h_wnd, DWMWA_WINDOW_CORNER_PREFERENCE,
+			&attribute, sizeof(int)
+		);
+
+		COLORREF color = RGB(20, 20, 20);
+		DwmSetWindowAttribute(
+			h_wnd, DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR,
+			&color, sizeof(COLORREF)
+		);
+	}
 #endif
 }

@@ -3,6 +3,11 @@
 
 #ifdef _WIN32
 	#include <windows.h>
+	#include <dwmapi.h>
+
+	#pragma comment(lib, "dwmapi.lib")
+	#define DWMWA_MICA_EFFECT DWORD(1029)
+	#define DWMWA_WINDOW_CORNER_PREFERENCE DWORD(33)
 #endif
 
 #include <glm/glm.hpp>
@@ -11,7 +16,11 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
+
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WGL
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include <thread>
 #include <mutex>
