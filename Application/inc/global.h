@@ -30,6 +30,7 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <cassert>
 #include <vector>
 #include <string>
 #include <list>

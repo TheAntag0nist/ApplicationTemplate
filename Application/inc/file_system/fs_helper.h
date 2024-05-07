@@ -9,10 +9,12 @@ public:
 
 	std::string get_current_dir();
 
-	std::string get_root_path();
-	std::string get_logger_path();
-	std::string get_shaders_path();
-	std::string get_textures_path();
+	std::string get_root_path() const;
+	const char* get_root_path_cstr() const;
+
+	std::string get_logger_path() const;
+	std::string get_shaders_path() const;
+	std::string get_textures_path() const;
 
 protected:
 	fs_helper() = default;

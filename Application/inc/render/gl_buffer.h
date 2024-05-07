@@ -5,10 +5,10 @@
 class gl_buffer {
 public:
 	gl_buffer();
-	~gl_buffer();
+	virtual ~gl_buffer();
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 
 	void init(int type);
 	void destroy();

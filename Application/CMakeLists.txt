@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 # Set Project Name
-set(PROJECT_NAME MasterOfDnD)
+set(PROJECT_NAME Application)
 
 # Set Project
 project (
@@ -34,6 +34,7 @@ set(SOURCE_FILES
 	./src/render/gl_camera.cpp
 	./src/render/gl_program.cpp
 	./src/render/gl_texture.cpp
+	./src/render/gl_framebuffer.cpp
 
 	./src/file_system/fs_helper.cpp
 

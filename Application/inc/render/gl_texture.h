@@ -8,11 +8,12 @@ public:
 	gl_texture();
 	~gl_texture();
 
+	void init();
 	void init(const char* img_path);
 	void destroy();
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 
 	size_t get_height() const;
 	size_t get_width() const;

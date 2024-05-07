@@ -10,7 +10,7 @@ public:
 	void inf(const std::string& msg) noexcept;
 	void wrn(const std::string& msg) noexcept;
 	void err(const std::string& msg) noexcept;
-
+	void ftl(const std::string& msg) noexcept;
 
 protected:
 	std::fstream m_file_stream;

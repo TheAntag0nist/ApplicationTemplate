@@ -24,7 +24,7 @@ protected:
 	void internal_init();
 
 protected:
-	const char* m_title = "MasterOfDnD";
+	const char* m_title = "Application";
 	GLFWwindow* m_window = nullptr;
 	float m_delta_time = 0.0f;
 	float m_last_frame = 0.0f;

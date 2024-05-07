@@ -4,6 +4,7 @@
 #include <render/gl_camera.h>
 #include <render/gl_program.h>
 #include <render/gl_texture.h>
+#include <render/gl_framebuffer.h>
 #include <file_system/fs_helper.h>
 
 #include <imgui.h>
@@ -12,6 +13,7 @@
 #include <imgui_impl_opengl3.h>
 
 gl_camera global_camera(glm::vec3(0.0f, 0.0f, 3.0f));
+gl_framebuffer m_scene_buffer;
 
 void app::init() {
 	fs_helper& fs_inst = fs_helper::get_instance();
@@ -98,6 +100,8 @@ void app::init() {
 
 void app::update() {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	m_scene_buffer.init(m_width, m_height);
+
 	float vertices[] = {
 		// positions         // texture coords
 		 0.5f,  0.5f, 0.0f,  1.0f, 1.0f, // top right
@@ -153,27 +157,59 @@ void app::update() {
 		m_delta_time = current_frame - m_last_frame;
 		m_last_frame = current_frame;
 
-		glfwPollEvents();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		bool value = true;
-		ImGui::ShowDemoWindow(&value);
-		
-		glViewport(0, 0, m_width, m_height);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
+		ImGui::Begin("Scene");
+		{
+			if (ImGui::BeginChild("GameRender")) {
+				float width = ImGui::GetContentRegionAvail().x;
+				float height = ImGui::GetContentRegionAvail().y;
+
+				m_scene_buffer.rescale(width, height);
+				ImGui::Image(
+					(ImTextureID)m_scene_buffer.get_texture().get_id(),
+					ImGui::GetContentRegionAvail(),
+					ImVec2(0, 1),
+					ImVec2(1, 0)
+				);
+				ImGui::EndChild();
+			}
+		}
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
+
+		m_scene_buffer.bind();
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_1.get_id());
 
-		glm::mat4 view = glm::mat4(1.0f); 
+		float width = m_scene_buffer.get_Width();
+		float height = m_scene_buffer.get_height();
+
+		glm::mat4 view = glm::mat4(1.0f);
 		view = global_camera.get_view();
-		
+
 		glm::mat4 projection = glm::mat4(1.0f);
-		projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
-		
-		base_program.set_mat4("projection", projection); 
+		projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+
+		base_program.set_mat4("projection", projection);
 		base_program.set_mat4("view", view);
 
 		glm::mat4 model = glm::mat4(1.0f);
@@ -185,17 +221,11 @@ void app::update() {
 		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		m_scene_buffer.unbind();
+		glDisable(GL_DEPTH_TEST);
 
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
 		glfwSwapBuffers(m_window);
+		glfwPollEvents();
 	}
 }
 
@@ -284,11 +314,11 @@ void app::internal_init() {
 		);
 
 		// Remove rounded corners
-		int attribute = DWMWCP_DONOTROUND;
-		DwmSetWindowAttribute(
-			h_wnd, DWMWA_WINDOW_CORNER_PREFERENCE,
-			&attribute, sizeof(int)
-		);
+		//int attribute = DWMWCP_DONOTROUND;
+		//DwmSetWindowAttribute(
+		//	h_wnd, DWMWA_WINDOW_CORNER_PREFERENCE,
+		//	&attribute, sizeof(int)
+		//);
 
 		COLORREF color = RGB(20, 20, 20);
 		DwmSetWindowAttribute(
@@ -296,5 +326,7 @@ void app::internal_init() {
 			&color, sizeof(COLORREF)
 		);
 	}
+#elif __unix__
+	
 #endif
 }

@@ -25,6 +25,10 @@ void logger::err(const std::string& msg) noexcept {
 	message(msg_type::ERR, msg);
 }
 
+void logger::ftl(const std::string& msg) noexcept {
+	message(msg_type::FTL, msg);
+}
+
 void logger::message(msg_type type, const std::string msg) noexcept {
 	std::scoped_lock lk(m_mutex);
 	std::stringstream ss;
@@ -53,4 +57,9 @@ void logger::message(msg_type type, const std::string msg) noexcept {
 
 	ss << msg << std::endl;
 	m_file_stream << ss.str();
+
+	if (type == msg_type::FTL) {
+		m_file_stream.flush();
+		std::exit(-1);
+	}
 }
