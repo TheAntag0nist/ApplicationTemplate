@@ -81,6 +81,55 @@ void gl_program::set_integer(const std::string& name, int value) {
 	glUniform1i(location, value);
 }
 
+void gl_program::set_vec2(const std::string& name, glm::vec2 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniform2fv(location, 1, &value[0]);
+}
+
+void gl_program::set_vec2(const std::string& name, float x, float y) {
+    auto value = glm::vec2(x, y);
+    set_vec2(name, value);
+}
+
+void gl_program::set_vec3(const std::string& name, glm::vec3 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniform3fv(location, 1, &value[0]);
+}
+
+void gl_program::set_vec3(const std::string& name, float x, float y, float z) {
+    auto value = glm::vec3(x, y, z);
+    set_vec3(name, value);
+}
+
+void gl_program::set_vec4(const std::string& name, glm::vec4 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniform4fv(location, 1, &value[0]);
+}
+
+void gl_program::set_vec4(const std::string& name, float x, float y, float z, float w) {
+    auto value = glm::vec4(x, y, z, w);
+    set_vec4(name, value);
+}
+
+void gl_program::set_mat2(const std::string& name, glm::mat2 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniformMatrix2fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+void gl_program::set_mat3(const std::string& name, glm::mat3 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+void gl_program::set_mat4(const std::string& name, glm::mat4 value) {
+    auto location = glGetUniformLocation(m_program_id, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+uint32_t gl_program::get_id() const {
+    return m_program_id;
+}
+
 void gl_program::check_compile_errors(uint32_t shader, std::string type) {
     char info_log[1024];
     int success;

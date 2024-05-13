@@ -17,6 +17,16 @@ int gl_texture::get_channels() const {
 	return m_channels;
 }
 
+uint32_t gl_texture::get_id() const {
+	return m_texture_id;
+}
+
+void gl_texture::init() {
+	glGenTextures(1, &m_texture_id);
+	m_is_initialized = true;
+	m_image_path = "";
+}
+
 void gl_texture::init(const char* img_path) {
 	m_image_path = img_path;
 	glGenTextures(1, &m_texture_id);
@@ -31,13 +41,17 @@ void gl_texture::init(const char* img_path) {
 	unsigned char* data = stbi_load(img_path, &m_width, &m_height, &m_channels, 0);
 	if (data != nullptr)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(
+			GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height,
+			0, GL_RGB, GL_UNSIGNED_BYTE, data
+		);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 		std::cout << "[ERR]:> Failed to load texture" << std::endl;
 
 	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void gl_texture::destroy() {
@@ -54,10 +68,10 @@ void gl_texture::destroy() {
 }
 
 
-void gl_texture::bind() {
+void gl_texture::bind() const {
 	glBindTexture(GL_TEXTURE_2D, m_texture_id);
 }
 
-void gl_texture::unbind() {
+void gl_texture::unbind() const {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

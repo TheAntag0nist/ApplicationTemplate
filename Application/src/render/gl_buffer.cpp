@@ -10,13 +10,13 @@ gl_buffer::~gl_buffer() {
 	destroy();
 }
 
-void gl_buffer::bind() {
+void gl_buffer::bind() const {
 	if (!m_is_initialized)
 		return;
 	glBindBuffer(m_buffer_type, m_buffer_obj);
 }
 
-void gl_buffer::unbind() {
+void gl_buffer::unbind() const {
 	glBindBuffer(m_buffer_type, 0);
 }
 

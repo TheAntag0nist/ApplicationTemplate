@@ -1,7 +1,7 @@
 #include <app.h>
 
 int main() {
-	app instance;
+	auto& instance = app::get_instance();
 	instance.init();
 	instance.update();
 	instance.destroy();

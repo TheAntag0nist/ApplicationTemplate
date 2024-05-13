@@ -8,15 +8,17 @@ public:
 	gl_texture();
 	~gl_texture();
 
+	void init();
 	void init(const char* img_path);
 	void destroy();
 
-	void bind();
-	void unbind();
+	void bind() const;
+	void unbind() const;
 
 	size_t get_height() const;
 	size_t get_width() const;
 	int get_channels() const;
+	uint32_t get_id() const;
 
 private:
 	std::string m_image_path;
