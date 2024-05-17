@@ -2,8 +2,8 @@
 #define GL_FRAMEBUFFER_H
 #include <global.h>
 #include <engine/logger.h>
-#include <render/gl_buffer.h>
-#include <render/gl_texture.h>
+#include <render/gl/gl_buffer.h>
+#include <render/gl/gl_texture.h>
 
 class gl_framebuffer {
 public:

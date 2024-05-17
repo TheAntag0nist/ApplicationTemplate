@@ -1,4 +1,4 @@
-#include <render/gl_program.h>
+#include <render/gl/gl_program.h>
 
 gl_program::~gl_program() {
     glDeleteProgram(m_program_id);

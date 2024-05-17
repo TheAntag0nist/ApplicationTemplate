@@ -22,6 +22,10 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
+#include <boost/uuid/uuid.hpp>            
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp> 
+
 #include <thread>
 #include <mutex>
 

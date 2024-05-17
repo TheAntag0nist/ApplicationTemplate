@@ -13,6 +13,7 @@ project (
 
 # External libraries
 find_package(Stb REQUIRED)
+find_package(Boost REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
@@ -30,13 +31,16 @@ set(SOURCE_FILES
 	./src/main.cpp
 	./src/app.cpp
 
-	./src/render/gl_buffer.cpp
-	./src/render/gl_camera.cpp
-	./src/render/gl_program.cpp
-	./src/render/gl_texture.cpp
-	./src/render/gl_framebuffer.cpp
+	./src/render/gl/gl_buffer.cpp
+	./src/render/gl/gl_camera.cpp
+	./src/render/gl/gl_program.cpp
+	./src/render/gl/gl_texture.cpp
+	./src/render/gl/gl_framebuffer.cpp
+	./src/render/render_core.cpp
 
 	./src/file_system/fs_helper.cpp
+
+	./src/ui/ui_core.cpp
 
 	./src/engine/logger.cpp
 )
@@ -51,6 +55,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE imguizmo::imguizmo)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${Stb_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${RAPIDXML_INCLUDE_DIRS})
 
 if(WIN32)

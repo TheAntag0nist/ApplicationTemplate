@@ -1,10 +1,10 @@
 #include <app.h>
 #include <engine/logger.h>
-#include <render/gl_buffer.h>
-#include <render/gl_camera.h>
-#include <render/gl_program.h>
-#include <render/gl_texture.h>
-#include <render/gl_framebuffer.h>
+#include <render/gl/gl_buffer.h>
+#include <render/gl/gl_camera.h>
+#include <render/gl/gl_program.h>
+#include <render/gl/gl_texture.h>
+#include <render/gl/gl_framebuffer.h>
 #include <file_system/fs_helper.h>
 
 #include <imgui.h>
