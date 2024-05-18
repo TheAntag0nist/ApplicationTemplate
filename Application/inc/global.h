@@ -6,9 +6,15 @@
 	#include <dwmapi.h>
 
 	#pragma comment(lib, "dwmapi.lib")
+	#pragma comment(lib, "bcrypt.lib")
 	#define DWMWA_MICA_EFFECT DWORD(1029)
 	#define DWMWA_WINDOW_CORNER_PREFERENCE DWORD(33)
 #endif
+
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
