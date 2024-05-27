@@ -1,9 +1,10 @@
 #ifndef GL_TEXTURE_H
 #define GL_TEXTURE_H
 #define STB_IMAGE_IMPLEMENTATION
+#include <engine/base_texture.h>
 #include <global.h>
 
-class gl_texture {
+class gl_texture : public base_texture {
 public:
 	gl_texture();
 	~gl_texture();
@@ -18,7 +19,6 @@ public:
 	size_t get_height() const;
 	size_t get_width() const;
 	int get_channels() const;
-	uint32_t get_id() const;
 
 private:
 	std::string m_image_path;

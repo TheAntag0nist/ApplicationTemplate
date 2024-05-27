@@ -17,10 +17,6 @@ int gl_texture::get_channels() const {
 	return m_channels;
 }
 
-uint32_t gl_texture::get_id() const {
-	return m_texture_id;
-}
-
 void gl_texture::init() {
 	glGenTextures(1, &m_texture_id);
 	m_is_initialized = true;

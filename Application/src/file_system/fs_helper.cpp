@@ -6,7 +6,9 @@ fs_helper& fs_helper::get_instance() {
 }
 
 std::string fs_helper::get_logger_path() const {
-	return m_default_logger;
+	std::filesystem::path main_path = m_root;
+	main_path /= m_default_logger;
+	return main_path.string();
 }
 
 std::string fs_helper::get_current_dir() {
@@ -18,9 +20,19 @@ std::string fs_helper::get_root_path() const {
 }
 
 std::string fs_helper::get_shaders_path() const {
-	return m_shaders;
+	std::filesystem::path main_path = m_root;
+	main_path /= m_shaders;
+	return main_path.string();
+}
+
+std::string fs_helper::get_materials_path() const {
+	std::filesystem::path main_path = m_root;
+	main_path /= m_materials;
+	return main_path.string();
 }
 
 std::string fs_helper::get_textures_path() const {
-	return m_textures;
+	std::filesystem::path main_path = m_root;
+	main_path /= m_textures;
+	return main_path.string();
 }

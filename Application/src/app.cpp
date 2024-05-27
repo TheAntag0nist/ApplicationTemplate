@@ -2,6 +2,7 @@
 #include <ui/ui_core.h>
 #include <engine/logger.h>
 #include <render/render_core.h>
+#include <engine/mat_controller.h>
 #include <file_system/fs_helper.h>
 
 void app::init() {
@@ -96,8 +97,11 @@ void app::init() {
 
 void app::update() {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	auto& mat_ctrl_inst = mat_controller::get_instance();
 	auto& render_inst = render_core::get_instance();
 	auto& ui_inst = ui_core::get_instance();
+
+	mat_ctrl_inst.load_materials();
 
 	while (!glfwWindowShouldClose(m_window)) {
 		float current_frame = static_cast<float>(glfwGetTime());

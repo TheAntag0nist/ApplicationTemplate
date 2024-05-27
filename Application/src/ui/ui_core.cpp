@@ -1,4 +1,5 @@
 #include <ui/ui_core.h>
+#include <ui/ui_nav_element.h>
 
 ui_core& ui_core::get_instance() {
 	static ui_core core;
@@ -36,6 +37,16 @@ void ui_core::update() {
 		ui_layout_ptr& layout = item.second;
 		layout->update();
 	}
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+	ui_nav_element::begin_child("walking thru", ImVec2(240, 300));
+
+	bool temp;
+	ImGui::Checkbox("Toggle", &temp);
+	ImGui::Checkbox("Toggle 1", &temp);
+
+	ui_nav_element::end_child();
+	ImGui::PopStyleVar();
 
 	ImGui::End();
 	ImGui::PopStyleVar(2);

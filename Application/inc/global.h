@@ -11,6 +11,10 @@
 	#define DWMWA_WINDOW_CORNER_PREFERENCE DWORD(33)
 #endif
 
+#include <nlohmann/json.hpp>
+#include <rapidxml/rapidxml.hpp>
+
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
@@ -37,6 +41,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <stddef.h>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
