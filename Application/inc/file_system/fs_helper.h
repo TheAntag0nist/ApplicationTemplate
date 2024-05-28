@@ -15,17 +15,19 @@ public:
 	std::string get_logger_path() const;
 	std::string get_shaders_path() const;
 	std::string get_textures_path() const;
+	std::string get_materials_path() const;
 
 protected:
 	fs_helper() = default;
 
 protected:
-
 	const char* m_root = "./resources";
-	const char* m_shaders = "./resources/shaders";
-	const char* m_textures = "./resources/textures";
-	const char* m_user_space = "./resources/user_space";
-	const char* m_default_logger = "./resources/app_log.log";
+	const char* m_shaders = "shaders";
+	const char* m_textures = "textures";
+	const char* m_materials = "materials";
+	const char* m_user_space = "user_space";
+	const char* m_default_logger = "app_log.log";
+
 };
 
 #endif

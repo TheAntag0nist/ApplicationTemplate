@@ -1,4 +1,4 @@
-#include <render/gl_framebuffer.h>
+#include <render/gl/gl_framebuffer.h>
 
 gl_framebuffer::gl_framebuffer(): m_width(0), m_height(0) {}
 

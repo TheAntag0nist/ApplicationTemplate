@@ -1,4 +1,4 @@
-#include <render/gl_program.h>
+#include <render/gl/gl_program.h>
 
 gl_program::~gl_program() {
     glDeleteProgram(m_program_id);
@@ -18,20 +18,22 @@ void gl_program::init(const char* vert_path, const char* frag_path) {
         // open files
         v_shader_file.open(vert_path);
         f_shader_file.open(frag_path);
-        std::stringstream vShaderStream, fShaderStream;
+        std::stringstream vert_shader_stream;
+        std::stringstream frag_shader_stream;
         // read file's buffer contents into streams
-        vShaderStream << v_shader_file.rdbuf();
-        fShaderStream << f_shader_file.rdbuf();
+        vert_shader_stream << v_shader_file.rdbuf();
+        frag_shader_stream << f_shader_file.rdbuf();
         // close file handlers
         v_shader_file.close();
         f_shader_file.close();
         // convert stream into string
-        vertex_code = vShaderStream.str();
-        fragment_code = fShaderStream.str();
+        vertex_code = vert_shader_stream.str();
+        fragment_code = frag_shader_stream.str();
     }
     catch (std::ifstream::failure& e)
     {
         std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+        return;
     }
 
     const char* v_shader_code_cstr = vertex_code.c_str();
@@ -62,7 +64,7 @@ void gl_program::init(const char* vert_path, const char* frag_path) {
     glDeleteShader(fragment);
 }
 
-void gl_program::use() {
+void gl_program::use_material() {
 	glUseProgram(m_program_id);
 }
 

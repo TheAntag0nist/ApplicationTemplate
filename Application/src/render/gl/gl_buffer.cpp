@@ -1,4 +1,4 @@
-#include <render/gl_buffer.h>
+#include <render/gl/gl_buffer.h>
 
 gl_buffer::gl_buffer() {
 	m_is_initialized = false;

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<material>
+	<shaders>
+		<shader type="vert" name="mesh_base.vert"/>
+		<shader type="frag" name="mesh_base.frag"/>
+	</shaders>
+</material>

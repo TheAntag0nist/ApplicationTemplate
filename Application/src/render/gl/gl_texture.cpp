@@ -1,4 +1,4 @@
-#include <render/gl_texture.h>
+#include <render/gl/gl_texture.h>
 
 gl_texture::gl_texture() : 
 	m_texture_id(0), m_is_initialized(false),
@@ -15,10 +15,6 @@ size_t gl_texture::get_width() const {
 
 int gl_texture::get_channels() const {
 	return m_channels;
-}
-
-uint32_t gl_texture::get_id() const {
-	return m_texture_id;
 }
 
 void gl_texture::init() {
