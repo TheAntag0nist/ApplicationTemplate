@@ -21,13 +21,13 @@ protected:
 	fs_helper() = default;
 
 protected:
-
 	const char* m_root = "./resources";
 	const char* m_shaders = "shaders";
 	const char* m_textures = "textures";
 	const char* m_materials = "materials";
 	const char* m_user_space = "user_space";
 	const char* m_default_logger = "app_log.log";
+
 };
 
 #endif

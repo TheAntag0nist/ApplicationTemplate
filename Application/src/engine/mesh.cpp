@@ -4,6 +4,7 @@ mesh::mesh(std::vector<base_vertex>& vertexes, std::vector<uint32_t>& indexes, s
 	m_textures = textures;
 	m_vertexes = vertexes;
 	m_indexes = indexes;
+	m_vertex_array = 0;
 }
 
 void mesh::destroy() {

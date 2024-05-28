@@ -51,7 +51,7 @@ set(SOURCE_FILES
 	./src/engine/mat_controller.cpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} "inc/engine/mat_controller.h")
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad::glad)
@@ -66,8 +66,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${GZIP_HPP_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${RAPIDXML_INCLUDE_DIRS})
 
 if(WIN32)
-# set_target_properties(${PROJECT_NAME} PROPERTIES 
-#     LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+    LINK_FLAGS "/ENTRY:mainCRTStartup /SUBSYSTEM:WINDOWS")
 elseif(UNIX)
 
 endif()
@@ -77,4 +77,5 @@ add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_SOURCE_DIR}/resources
-                ${CMAKE_CURRENT_BINARY_DIR}/resources)
+                ${CMAKE_CURRENT_BINARY_DIR}/resources
+)
