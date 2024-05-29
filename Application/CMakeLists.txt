@@ -45,10 +45,12 @@ set(SOURCE_FILES
 	./src/ui/ui_viewport.cpp
 	./src/ui/ui_nav_elements.cpp
 
+	./src/resources/mat_controller.cpp
+	./src/resources/fonts_controller.cpp
+
 	./src/engine/mesh.cpp
 	./src/engine/logger.cpp
 	./src/engine/base_texture.cpp
-	./src/engine/mat_controller.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

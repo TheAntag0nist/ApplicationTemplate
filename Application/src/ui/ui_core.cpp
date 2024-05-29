@@ -1,5 +1,6 @@
 #include <ui/ui_core.h>
 #include <ui/ui_nav_element.h>
+#include <resources/fonts_controller.h>
 
 ui_core& ui_core::get_instance() {
 	static ui_core core;
@@ -7,10 +8,14 @@ ui_core& ui_core::get_instance() {
 }
 
 void ui_core::init() {
-	render_core& render_inst = render_core::get_instance();
-	std::shared_ptr<ui_viewport> viewport(new ui_viewport());
-	viewport->set_framebuffer(render_inst.get_framebuffer());
-	add_layout(viewport);
+	auto& fonts_ctrl_inst = fonts_controller::get_instance();
+	m_main_font_name = "Libertine_Regular";
+	m_main_font = fonts_ctrl_inst.get_font_by_name(m_main_font_name);
+
+	//render_core& render_inst = render_core::get_instance();
+	//std::shared_ptr<ui_viewport> viewport(new ui_viewport());
+	//viewport->set_framebuffer(render_inst.get_framebuffer());
+	//add_layout(viewport);
 }
 
 void ui_core::update() {
@@ -25,6 +30,7 @@ void ui_core::update() {
 	ImGui::SetNextWindowPos(viewport->WorkPos);
 	ImGui::SetNextWindowViewport(viewport->ID);
 
+	ImGui::PushFont(m_main_font);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 4));
 	ImGui::Begin("Main", nullptr,
@@ -32,14 +38,15 @@ void ui_core::update() {
 		ImGuiWindowFlags_NoDecoration |
 		ImGuiWindowFlags_AlwaysAutoResize |
 		ImGuiWindowFlags_NoBringToFrontOnFocus);
-
+	
 	for (auto& item : m_layouts) {
 		ui_layout_ptr& layout = item.second;
 		layout->update();
 	}
 
+	ImVec2 size = ImGui::GetContentRegionAvail();
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ui_nav_element::begin_child("walking thru", ImVec2(240, 300));
+	ui_nav_element::begin_child("walking thru", size);
 
 	bool temp;
 	ImGui::Checkbox("Toggle", &temp);
@@ -50,6 +57,7 @@ void ui_core::update() {
 
 	ImGui::End();
 	ImGui::PopStyleVar(2);
+	ImGui::PopFont();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

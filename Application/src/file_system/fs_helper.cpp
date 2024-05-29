@@ -5,6 +5,12 @@ fs_helper& fs_helper::get_instance() {
 	return instance;
 }
 
+std::string fs_helper::get_fonts_path() const {
+	std::filesystem::path main_path = m_root;
+	main_path /= m_fonts;
+	return main_path.string();
+}
+
 std::string fs_helper::get_logger_path() const {
 	std::filesystem::path main_path = m_root;
 	main_path /= m_default_logger;

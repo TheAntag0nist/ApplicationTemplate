@@ -20,6 +20,8 @@ public:
 
 protected:
 	std::map<boost::uuids::uuid, ui_layout_ptr> m_layouts;
+	std::string m_main_font_name;
+	ImFont* m_main_font;
 
 private:
 	ui_core() = default;
