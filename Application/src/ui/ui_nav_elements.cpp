@@ -20,11 +20,14 @@ bool ui_nav_element::begin_child_ex(const char* name, ImGuiID id, const ImVec2& 
     ImGui::SetNextWindowPos(ImVec2(parent_window->DC.CursorPos.x, parent_window->DC.CursorPos.y + 34.0f));
     ImGui::SetNextWindowSize(size - ImVec2(0, 36));
 
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* main_font = io.Fonts->Fonts[0];
+
     parent_window->DrawList->AddRectFilled(parent_window->DC.CursorPos, parent_window->DC.CursorPos + ImVec2(size.x, size.y), ImColor(24, 24, 26), 4.0f);
     parent_window->DrawList->AddRect(parent_window->DC.CursorPos, parent_window->DC.CursorPos + ImVec2(size.x, size.y), ImColor(1.0f, 1.0f, 1.0f, 0.03f), 4.0f);
     parent_window->DrawList->AddLine(parent_window->DC.CursorPos + ImVec2(1, 32), parent_window->DC.CursorPos + ImVec2(size.x - 1, 32), ImColor(1.0f, 1.0f, 1.0f, 0.03f));
     parent_window->DrawList->AddRectFilled(parent_window->DC.CursorPos, parent_window->DC.CursorPos + ImVec2(size.x - 115, 32), ImColor(24, 24, 26), 4.0f, ImDrawFlags_RoundCornersTopLeft);
-    //parent_window->DrawList->AddText(bold, 15.0f, parent_window->DC.CursorPos + ImVec2(16, 9), ImColor(147, 190, 66), name);
+    parent_window->DrawList->AddText(main_font, 15.0f, parent_window->DC.CursorPos + ImVec2(16, 9), ImColor(147, 190, 66), name);
 
     // Build up name. If you need to append to a same child from multiple location in the ID stack, use BeginChild(ImGuiID id) with a stable value.
     const char* temp_window_name;

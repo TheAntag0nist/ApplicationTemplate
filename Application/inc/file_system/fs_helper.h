@@ -12,6 +12,7 @@ public:
 	std::string get_root_path() const;
 	const char* get_root_path_cstr() const;
 
+	std::string get_fonts_path() const;
 	std::string get_logger_path() const;
 	std::string get_shaders_path() const;
 	std::string get_textures_path() const;
@@ -22,6 +23,8 @@ protected:
 
 protected:
 	const char* m_root = "./resources";
+
+	const char* m_fonts = "fonts";
 	const char* m_shaders = "shaders";
 	const char* m_textures = "textures";
 	const char* m_materials = "materials";
